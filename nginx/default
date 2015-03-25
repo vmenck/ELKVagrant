@@ -1,0 +1,20 @@
+server {  
+        listen 80 default_server;
+
+        root /opt/elk/kibana-4.0.0-linux-x86;
+        index index.html index.htm;
+
+        # Make site accessible from http://localhost/
+        server_name localhost;
+
+        location / {
+                try_files $uri $uri/ =404;
+				proxy_set_header Host $http_host;
+				proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+				proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        location /kibana {
+                alias /opt/elk/kibana-4.0.0-linux-x86/src/public/;
+                try_files $uri $uri/ =404;
+        }
+}
